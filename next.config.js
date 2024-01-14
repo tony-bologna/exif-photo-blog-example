@@ -35,6 +35,9 @@ const nextConfig = {
       .concat(createRemotePattern(AWS_S3_HOSTNAME)),
     minimumCacheTTL: 31536000,
   },
+  experimental: {
+    ppr: true,
+  },
 };
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
