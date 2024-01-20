@@ -14,6 +14,7 @@ export const PATH_SETS      = '/sets';
 export const PATH_ADMIN     = '/admin';
 export const PATH_SIGN_IN   = '/sign-in';
 export const PATH_OG        = '/og';
+export const PATH_ABOUT     = '/about';
 
 // Path prefixes
 export const PREFIX_PHOTO           = '/p';
@@ -68,6 +69,9 @@ const pathWithNext = (path: string, next?: number) =>
 
 export const pathForRoot = (next?: number) =>
   pathWithNext(PATH_ROOT, next);
+
+export const pathForAbout = (next?: number) =>
+  pathWithNext(PATH_ADMIN, next);
 
 export const pathForGrid = (next?: number) =>
   pathWithNext(PATH_GRID, next);

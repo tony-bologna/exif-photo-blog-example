@@ -4,15 +4,31 @@ import { BiLogoGithub } from 'react-icons/bi';
 
 export default function RepoLink() {
   return (
-    <span className="inline-flex items-center gap-2 whitespace-nowrap">
+    <span className="flex items-center gap-2 whitespace-nowrap">
+      <span className=''>
+        Made with 🩷 <div className='hidden sm:inline-block'> & maintained</div> by 
+      </span>
+
+        <Link
+        href="http://github.com/sambecker/exif-photo-blog"
+        target="_blank"
+        className={clsx(
+          'gap-0.5 break-normal',
+          'text-main hover:text-main',
+          'hover:underline',
+        )}>
+        Antonio Ponce
+        </Link>
+
       <span className="hidden sm:inline-block">
-        Made with
+        using
       </span>
       <Link
         href="http://github.com/sambecker/exif-photo-blog"
         target="_blank"
         className={clsx(
-          'flex items-center gap-0.5',
+          'hidden',
+          'sm:flex items-center gap-0.5',
           'text-main hover:text-main',
           'hover:underline',
         )}

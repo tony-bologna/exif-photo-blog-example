@@ -57,7 +57,7 @@ export default function FooterClient({
                       Admin
                     </Link>
                     {SHOW_REPO_LINK &&
-                      <RepoLink />}
+                      <RepoLink/>}
                   </>}
               </div>
               <div className="flex items-center h-4">

@@ -13,6 +13,7 @@ import {
   isPathProtected,
   isPathSets,
   isPathSignIn,
+  PATH_ABOUT,
 } from '@/site/paths';
 import AnimateItems from '../components/AnimateItems';
 
@@ -62,15 +63,21 @@ export default function NavClient({
                 'w-full min-h-[4rem]',
                 'leading-none',
               )}>
+              <div className="hidden xs:block mr-4">
+                {renderLink(SITE_DOMAIN_OR_TITLE, PATH_ROOT)}
+              </div>
+
               <div className="flex flex-grow items-center gap-4">
                 <ViewSwitcher
                   currentSelection={switcherSelectionForPath()}
                   showAdmin={showAdmin}
                 />
               </div>
-              <div className="hidden xs:block">
-                {renderLink(SITE_DOMAIN_OR_TITLE, PATH_ROOT)}
+
+              <div>
+                {renderLink("About", PATH_ABOUT )}
               </div>
+
             </div>]
             : []}
         />
