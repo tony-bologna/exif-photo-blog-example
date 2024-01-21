@@ -74,7 +74,7 @@ export default function NavClient({
                 />
               </div>
 
-              <div>
+              <div className='mr-2'>
                 {renderLink("About", PATH_ABOUT )}
               </div>
 
