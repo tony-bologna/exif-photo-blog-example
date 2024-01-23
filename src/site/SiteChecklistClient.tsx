@@ -19,25 +19,30 @@ import Checklist from '@/components/Checklist';
 import { toastSuccess } from '@/toast';
 import { ConfigChecklistStatus } from './config';
 import StatusIcon from '@/components/StatusIcon';
+import { labelForStorage } from '@/services/storage';
 
 export default function SiteChecklistClient({
   hasPostgres,
-  hasBlob,
-  hasVercelBlob,
+  hasStorage,
+  hasVercelBlobStorage,
+  hasCloudflareR2Storage,
   hasAwsS3Storage,
+  hasMultipleStorageProviders,
+  currentStorage,
   hasAuth,
   hasAdminUser,
   hasTitle,
   hasDomain,
   showRepoLink,
   showFilmSimulations,
+  showExifInfo,
   isProModeEnabled,
   isGeoPrivacyEnabled,
   isPriorityOrderEnabled,
   isPublicApiEnabled,
   isOgTextBottomAligned,
-  showRefreshButton,
   gridAspectRatio,
+  showRefreshButton,
   secret,
 }: ConfigChecklistStatus & {
   showRefreshButton?: boolean
@@ -139,14 +144,19 @@ export default function SiteChecklistClient({
           and connect to project
         </ChecklistRow>
         <ChecklistRow
-          title="Setup blob store (one of the following)"
-          status={hasBlob}
+          title={!hasStorage
+            ? 'Setup storage (one of the following)'
+            : hasMultipleStorageProviders
+              // eslint-disable-next-line max-len
+              ? `Setup storage (new uploads go to: ${labelForStorage(currentStorage)})`
+              : 'Setup storage'}
+          status={hasStorage}
           isPending={isPendingPage}
         >
           {renderSubStatus(
-            hasVercelBlob ? 'checked' : 'optional',
+            hasVercelBlobStorage ? 'checked' : 'optional',
             <>
-              Vercel Blob:
+              {labelForStorage('vercel-blob')}:
               {' '}
               {renderLink(
                 // eslint-disable-next-line max-len
@@ -158,9 +168,20 @@ export default function SiteChecklistClient({
             </>,
           )}
           {renderSubStatus(
+            hasCloudflareR2Storage ? 'checked' : 'optional',
+            <>
+              {labelForStorage('cloudflare-r2')}:
+              {' '}
+              {renderLink(
+                'https://github.com/sambecker/exif-photo-blog#cloudflare-r2',
+                'create/configure bucket',
+              )}
+            </>
+          )}
+          {renderSubStatus(
             hasAwsS3Storage ? 'checked' : 'optional',
             <>
-              AWS S3:
+              {labelForStorage('aws-s3')}:
               {' '}
               {renderLink(
                 'https://github.com/sambecker/exif-photo-blog#aws-s3',
@@ -297,6 +318,15 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to prevent
           simulations showing up in <code>/grid</code> sidebar:
           {renderEnvVars(['NEXT_PUBLIC_HIDE_FILM_SIMULATIONS'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Show EXIF data"
+          status={showExifInfo}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"1"'} to hide EXIF data:
+          {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
         </ChecklistRow>
         <ChecklistRow
           title={`Grid Aspect Ratio: ${gridAspectRatio}`}

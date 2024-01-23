@@ -1,4 +1,9 @@
-import { Photo, photoHasCameraData, photoHasExifData, titleForPhoto } from '.';
+import {
+  Photo,
+  shouldShowCameraDataForPhoto,
+  shouldShowExifDataForPhoto,
+  titleForPhoto,
+} from '.';
 import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/ImageLarge';
 import { clsx } from 'clsx/lite';
@@ -84,16 +89,15 @@ export default function PhotoLarge({
                   </Link>
                 </div>
                 <Suspense>
-                  <AdminPhotoMenu
-                    photoId={photo.id}
-                    buttonClassName="translate-y-[-3.5px]"
-                  />
+                  <div className="h-4 translate-y-[-3.5px]">
+                    <AdminPhotoMenu photoId={photo.id} />
+                  </div>
                 </Suspense>
               </div>
               {tags.length > 0 &&
                 <PhotoTags tags={tags} />}
             </div>
-            {showCamera && photoHasCameraData(photo) &&
+            {showCamera && shouldShowCameraDataForPhoto(photo) &&
               <div className="space-y-0.5">
                 <PhotoCamera
                   camera={camera}
@@ -108,7 +112,7 @@ export default function PhotoLarge({
               </div>}
           </>)}
           {renderMiniGrid(<>
-            {photoHasExifData(photo) &&
+            {shouldShowExifDataForPhoto(photo) &&
               <ul className="text-medium">
                 <li>
                   {photo.focalLengthFormatted}

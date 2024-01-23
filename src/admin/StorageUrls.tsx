@@ -2,26 +2,27 @@ import { Fragment } from 'react';
 import AdminGrid from './AdminGrid';
 import Link from 'next/link';
 import ImageTiny from '@/components/ImageTiny';
-import { fileNameForBlobUrl } from '@/services/blob';
+import { StorageListResponse, fileNameForStorageUrl } from '@/services/storage';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
 import { clsx } from 'clsx/lite';
 import { pathForAdminUploadUrl } from '@/site/paths';
 import AddButton from './AddButton';
+import { formatDate } from 'date-fns';
 
-export default function BlobUrls({
+export default function StorageUrls({
   title,
   urls,
 }: {
   title?: string
-  urls: string[]
+  urls: StorageListResponse
 }) {
   return (
     <AdminGrid {...{ title }} >
-      {urls.map(url => {
+      {urls.map(({ url, uploadedAt }) => {
         const addUploadPath = pathForAdminUploadUrl(url);
-        const uploadFileName = fileNameForBlobUrl(url);
+        const uploadFileName = fileNameForStorageUrl(url);
         return <Fragment key={url}>
           <Link href={addUploadPath}>
             <ImageTiny
@@ -37,7 +38,9 @@ export default function BlobUrls({
           <Link
             href={addUploadPath}
             className="break-all"
-            title={url}
+            title={uploadedAt
+              ? `${url} @ ${formatDate(uploadedAt, 'yyyy-MM-dd HH:mm:ss')}`
+              : url}
           >
             {uploadFileName}
           </Link>

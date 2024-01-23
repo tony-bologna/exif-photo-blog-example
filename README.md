@@ -68,12 +68,49 @@ Installation
 - `NEXT_PUBLIC_PUBLIC_API = 1` enables public API available at `/api`
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
 - `NEXT_PUBLIC_HIDE_FILM_SIMULATIONS = 1` prevents Fujifilm simulations showing up in `/grid` sidebar
+- `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)
 - `NEXT_PUBLIC_GRID_ASPECT_RATIO = 1.5` sets aspect ratio for grid tiles (defaults to `1`—setting to `0` removes the constraint)
 - `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
 
-### Setup alternate storage
+## Alternate storage providers
 
-#### AWS S3
+Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used at a time. Ideally, this is configured before photos are uploaded (see [Issue #34](https://github.com/sambecker/exif-photo-blog/issues/34) for migration considerations). If you have multiple adapters, you can set one as preferred by storing "aws-s3," "cloudflare-r2," or "vercel-blob" in `NEXT_PUBLIC_STORAGE_PREFERENCE`.
+
+### Cloudflare R2
+
+1. Setup bucket
+   - [Create R2 bucket](https://developers.cloudflare.com/r2/) with default settings
+   - Setup CORS under bucket settings:
+   ```json
+   [{
+       "AllowedHeaders": ["*"],
+       "AllowedMethods": [
+         "GET",
+         "PUT"
+       ],
+       "AllowedOrigins": [
+          "http://localhost:3000",
+          "https://{VERCEL_PROJECT_NAME}*.vercel.app",
+          "{PRODUCTION_DOMAIN}"
+       ]
+   }]
+   ```
+   - Enable public hosting by doing one of the following:
+       - Select "Connect Custom Domain" and choose a Cloudflare domain
+       - OR
+       - Select "Allow Access" from R2.dev subdomain
+   - Store public configuration:
+     - `NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET`: bucket name
+     - `NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID`: account id (found on R2 overview page)
+     - `NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN`: either "your-custom-domain.com" or "pub-jf90908...s0d9f8s0s9df.r2.dev" (_do not include "https://" in your domain_)
+2. Setup private credentials
+   - Create API token by selecting "Manage R2 API Tokens," and clicking "Create API Token"
+   - Select "Object Read & Write," choose "Apply to specific buckets only," and select the bucket created in Step 1
+   - Store credentials (⚠️ _Ensure access keys are not prefixed with `NEXT_PUBLIC`_):
+     - `CLOUDFLARE_R2_ACCESS_KEY`
+     - `CLOUDFLARE_R2_SECRET_ACCESS_KEY`
+
+### AWS S3
 
 1. Setup bucket
    - [Create S3 bucket](https://s3.console.aws.amazon.com/s3) with "ACLs enabled," and "Block all public access" turned off
@@ -93,10 +130,10 @@ Installation
       "ExposeHeaders": []
      }]
      ```
-   - Store configuration 
+   - Store public configuration
      - `NEXT_PUBLIC_AWS_S3_BUCKET`: bucket name
      - `NEXT_PUBLIC_AWS_S3_REGION`: bucket region, e.g., "us-east-1"
-2. Setup credentials
+2. Setup private credentials
    - [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) using JSON editor:
      ```json
      {

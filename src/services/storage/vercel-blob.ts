@@ -1,4 +1,4 @@
-import { PATH_ADMIN_UPLOAD_BLOB } from '@/site/paths';
+import { PATH_API_VERCEL_BLOB_UPLOAD } from '@/site/paths';
 import { copy, del, list } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 
@@ -6,8 +6,13 @@ const VERCEL_BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
   /^vercel_blob_rw_([a-z0-9]+)_[a-z0-9]+$/i,
 )?.[1].toLowerCase();
 
-export const VERCEL_BLOB_BASE_URL =
-  `https://${VERCEL_BLOB_STORE_ID}.public.blob.vercel-storage.com`;
+export const VERCEL_BLOB_BASE_URL = VERCEL_BLOB_STORE_ID
+  ? `https://${VERCEL_BLOB_STORE_ID}.public.blob.vercel-storage.com`
+  : undefined;
+
+export const isUrlFromVercelBlob = (url?: string) =>
+  VERCEL_BLOB_BASE_URL &&
+  url?.startsWith(VERCEL_BLOB_BASE_URL);
 
 export const vercelBlobUploadFromClient = async (
   file: File | Blob,
@@ -18,7 +23,7 @@ export const vercelBlobUploadFromClient = async (
     file,
     {
       access: 'public',
-      handleUploadUrl: PATH_ADMIN_UPLOAD_BLOB,
+      handleUploadUrl: PATH_API_VERCEL_BLOB_UPLOAD,
     },
   )
     .then(({ url }) => url);
@@ -41,4 +46,7 @@ export const vercelBlobCopy = (
 export const vercelBlobDelete = (fileName: string) => del(fileName);
 
 export const vercelBlobList = (prefix: string) => list({ prefix })
-  .then(({ blobs }) => blobs.map(({ url }) => url));
+  .then(({ blobs }) => blobs.map(({ url, uploadedAt }) => ({
+    url,
+    uploadedAt,
+  })));
