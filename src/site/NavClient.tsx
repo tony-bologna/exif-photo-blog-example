@@ -16,6 +16,7 @@ import {
   PATH_ABOUT,
 } from '@/site/paths';
 import AnimateItems from '../components/AnimateItems';
+import Image from 'next/image';
 
 export default function NavClient({
   showAdmin,
@@ -35,6 +36,7 @@ export default function NavClient({
     typeof linkOrAction === 'string'
       ? <Link href={linkOrAction}>{text}</Link>
       : <button onClick={linkOrAction}>{text}</button>;
+
 
   const switcherSelectionForPath = (): SwitcherSelection | undefined => {
     if (pathname === PATH_ROOT) {
@@ -75,7 +77,9 @@ export default function NavClient({
               </div>
 
               <div className='mr-2'>
-                {renderLink("About", PATH_ABOUT )}
+              <Link href={PATH_ABOUT}>
+              <Image className='hover:bg-black transition-all duration-500' src={'/staticPics/milli_aboout2.png'} width={100} height={50} alt="about section link"/>
+              </Link>
               </div>
 
             </div>]
