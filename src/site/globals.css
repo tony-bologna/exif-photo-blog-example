@@ -7,8 +7,8 @@
   body {
     @apply
       text-main
+      bg-main
       font-mono text-sm md:text-base
-      bg-violet-100	 dark:bg-emerald-950
   }
   /* Forms */
   label {
@@ -17,12 +17,13 @@
       text-medium
       tracking-wider
   }
+  .control,
   button, .button,
   input[type=text], input[type=email], input[type=password], select {
     @apply
       px-2.5 py-2
       border rounded-md
-      bg-white dark:bg-black
+      bg-main
       border-gray-200 dark:border-gray-700
       font-mono text-base leading-tight
       min-h-[2.4rem]
@@ -105,7 +106,7 @@
   button.link {
     @apply
       p-0 min-h-0
-      border-none bg-transparent active:bg-transparent shadow-none
+      border-none active:bg-transparent shadow-none
   }
   a, .link {
     @apply
@@ -115,7 +116,7 @@
   /* Common Utilities: Text */
   .text-main {
     @apply
-      text-emerald-950 dark:text-violet-100
+      text-gray-900 dark:text-gray-100
   }
   .text-invert {
     @apply
@@ -142,12 +143,16 @@
       text-red-500 dark:text-red-400
   }
   /* Common Utilities: Background */
+  .bg-main {
+    @apply
+      bg-white dark:bg-black
+  }
   .bg-content {
     @apply
       bg-white border-gray-200
       dark:bg-black dark:border-gray-800
   }
-  .bg-primary {
+  .bg-invert {
     @apply
       bg-gray-900 dark:bg-gray-100
   }
