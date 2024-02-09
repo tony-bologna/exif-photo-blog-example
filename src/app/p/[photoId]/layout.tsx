@@ -1,10 +1,9 @@
 import {
-  GENERATE_STATIC_PARAMS_LIMIT,
   GRID_THUMBNAILS_TO_SHOW_MAX,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
-import { Metadata } from 'next/types';
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import {
   PATH_ROOT,
@@ -12,15 +11,9 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotosNearIdCached } from '@/cache';
-import { getPhotoIds } from '@/services/vercel-postgres';
+import { getPhotoCached, getPhotosNearIdCached } from '@/photo/cache';
 
-export async function generateStaticParams() {
-  const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
-  return photos.map(photoId => ({
-    params: { photoId },
-  }));
-}
+export const runtime = 'edge';
 
 interface PhotoProps {
   params: { photoId: string }
@@ -29,12 +22,7 @@ interface PhotoProps {
 export async function generateMetadata({
   params: { photoId },
 }:PhotoProps): Promise<Metadata> {
-  const photos = await getPhotosNearIdCached(
-    photoId,
-    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
-  );
-
-  const photo = photos.find(p => p.id === photoId);
+  const photo = await getPhotoCached(photoId);
 
   if (!photo) { return {}; }
 
@@ -75,6 +63,9 @@ export default async function PhotoPage({
   if (!photo) { redirect(PATH_ROOT); }
   
   const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
+
+  // Warm OG image without waiting on response
+  fetch(absolutePathForPhotoImage(photo));
 
   return <>
     {children}

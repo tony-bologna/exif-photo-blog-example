@@ -1,26 +1,28 @@
-import { getPhotosCached } from '@/cache';
+import { getPhotosCached } from '@/photo/cache';
 import SiteGrid from '@/components/SiteGrid';
-import {
-  PHOTO_LOAD_MULTIPLE_GRID,
-  generateOgImageMetaForPhotos,
-} from '@/photo';
+import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
-import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
-import { Metadata } from 'next/types';
+import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
+import { pathForGrid } from '@/site/paths';
+import { Metadata } from 'next';
+import {
+  PaginationParams,
+  getPaginationForSearchParams,
+} from '@/site/pagination';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarDataCached } from '@/photo/data';
-import { MorePhotosGrid } from '@/photo/MorePhotosGrid';
-import { Suspense } from 'react';
 
-export const revalidate = 3600;
+export const runtime = 'edge';
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
   return generateOgImageMetaForPhotos(photos);
 }
 
-export default async function GridPage() {
+export default async function GridPage({ searchParams }: PaginationParams) {
+  const { offset, limit } = getPaginationForSearchParams(searchParams);
+
   const [
     photos,
     photosCount,
@@ -28,23 +30,18 @@ export default async function GridPage() {
     cameras,
     simulations,
   ] = await Promise.all([
-    getPhotosCached({ limit: PHOTO_LOAD_MULTIPLE_GRID }),
+    getPhotosCached({ limit }),
     ...getPhotoSidebarDataCached(),
   ]);
 
+  const showMorePath = photosCount > photos.length
+    ? pathForGrid(offset + 1)
+    : undefined;
+  
   return (
     photos.length > 0
       ? <SiteGrid
-        contentMain={<div className="space-y-0.5 sm:space-y-1">
-          <PhotoGrid {...{ photos }} />
-          <Suspense>
-            <MorePhotosGrid
-              initialOffset={PHOTO_LOAD_MULTIPLE_GRID}
-              itemsPerRequest={PHOTO_LOAD_MULTIPLE_GRID}
-              totalPhotosCount={photosCount}
-            />
-          </Suspense>
-        </div>}
+        contentMain={<PhotoGrid {...{ photos, showMorePath }} />}
         contentSide={<div className="sticky top-4 space-y-4">
           <PhotoGridSidebar {...{
             tags,
@@ -55,8 +52,6 @@ export default async function GridPage() {
         </div>}
         sideHiddenOnMobile
       />
-      : <Suspense>
-        <PhotosEmptyState />
-      </Suspense> 
+      : <PhotosEmptyState />
   );
 }

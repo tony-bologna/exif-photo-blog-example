@@ -1,5 +1,5 @@
-import { getPhotosCached, getPhotosCountCached } from '@/cache';
-import MoreComponentsClient from '@/components/MoreComponentsClient';
+import { getPhotosCached, getPhotosCountCached } from '@/photo/cache';
+import MorePhotos from '@/photo/MorePhotos';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
 import {
   PaginationParams,
@@ -26,10 +26,7 @@ export default async function GridPage({ searchParams }: PaginationParams) {
         <StaggeredOgPhotos photos={photos} />
       </div>
       {showMorePhotos &&
-        <MoreComponentsClient
-          label="More photos"
-          path={pathForOg(offset + 1)}
-        />}
+        <MorePhotos path={pathForOg(offset + 1)} />}
     </div>
   );
 }
