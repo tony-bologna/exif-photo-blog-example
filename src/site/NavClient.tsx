@@ -6,8 +6,7 @@ import Link from 'next/link';
 import SiteGrid from '../components/SiteGrid';
 import { SITE_DOMAIN_OR_TITLE } from '@/site/config';
 import ViewSwitcher, { SwitcherSelection } from '@/site/ViewSwitcher';
-import {
-  PATH_ROOT,
+import { PATH_ROOT,
   isPathAdmin,
   isPathGrid,
   isPathProtected,
