@@ -77,7 +77,8 @@ export default function NavClient({
 
               <div className='mr-2'>
               <Link href={PATH_ABOUT}>
-              <Image className='hover:bg-black transition-all duration-500' src={'/staticPics/milli_aboout2.png'} width={100} height={50} alt="about section link"/>
+                About
+              {/* <Image className='hover:bg-black transition-all duration-500' src={'/staticPics/milli_aboout2.png'} width={100} height={50} alt="about section link"/> */}
               </Link>
               </div>
 
