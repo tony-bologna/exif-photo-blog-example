@@ -10,7 +10,7 @@ export default async function AboutPage() {
                 centered={true}
             >
                 <div className='flex-inline mt-8'>
-                    <h1 className='text-3xl'> Mili's About Page </h1>
+                    <h1 className='text-3xl'> Milis About Page </h1>
                 </div>
 
                 <div className='flex flex-row m-16'>
