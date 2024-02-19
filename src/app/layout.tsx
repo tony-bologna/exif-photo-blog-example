@@ -2,8 +2,9 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
+import { Metadata } from 'next';
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
-import AppStateProvider from '@/state/AppStateProvider';
+import StateProvider from '@/state/AppStateProvider';
 import ThemeProviderClient from '@/site/ThemeProviderClient';
 import Nav from '@/site/Nav';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
@@ -12,8 +13,7 @@ import Footer from '@/site/Footer';
 import { Suspense } from 'react';
 import FooterClient from '@/site/FooterClient';
 import NavClient from '@/site/NavClient';
-import { Metadata } from 'next/types';
-import MoreComponentsProvider from '@/state/MoreComponentsProvider';
+import CommandK from '@/components/CommandK';
 
 import '../site/globals.css';
 
@@ -73,33 +73,32 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={ibmPlexMono.variable}>
-        <AppStateProvider>
-          <MoreComponentsProvider>
-            <ThemeProviderClient>
-              <main className={clsx(
-                'mx-3 mb-3',
-                'lg:mx-6 lg:mb-6',
+        <StateProvider>
+          <ThemeProviderClient>
+            <main className={clsx(
+              'mx-3 mb-3',
+              'lg:mx-6 lg:mb-6',
+            )}>
+              <Suspense fallback={<NavClient />}>
+                <Nav />
+              </Suspense>
+              <div className={clsx(
+                'min-h-[16rem] sm:min-h-[30rem]',
+                'mb-12',
               )}>
-                <Suspense fallback={<NavClient />}>
-                  <Nav />
-                </Suspense>
-                <div className={clsx(
-                  'min-h-[16rem] sm:min-h-[30rem]',
-                  'mb-12',
-                )}>
-                  {children}
-                </div>
-                <Suspense fallback={<FooterClient />}>
-                  <Footer />
-                </Suspense>
-              </main>
-            </ThemeProviderClient>
-          </MoreComponentsProvider>
-        </AppStateProvider>
-        <Analytics debug={false} />
-        <SpeedInsights debug={false}  />
+                {children}
+              </div>
+              <Suspense fallback={<FooterClient />}>
+                <Footer />
+              </Suspense>
+            </main>
+          </ThemeProviderClient>
+        </StateProvider>
+        <Analytics />
+        <SpeedInsights />
         <PhotoEscapeHandler />
         <ToasterWithThemes />
+        <CommandK />
       </body>
     </html>
   );
