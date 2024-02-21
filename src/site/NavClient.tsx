@@ -10,7 +10,6 @@ import { PATH_ROOT,
   isPathAdmin,
   isPathGrid,
   isPathProtected,
-  isPathSets,
   isPathSignIn,
   PATH_ABOUT,
 } from '@/site/paths';
@@ -42,8 +41,6 @@ export default function NavClient({
       return 'full-frame';
     } else if (isPathGrid(pathname)) {
       return 'grid';
-    } else if (isPathSets(pathname)) {
-      return 'sets';
     } else if (isPathProtected(pathname)) {
       return 'admin';
     }

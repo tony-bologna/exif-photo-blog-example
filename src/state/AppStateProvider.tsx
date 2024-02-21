@@ -17,6 +17,8 @@ export default function AppStateProvider({
   const [nextPhotoAnimation, setNextPhotoAnimation] =
     useState<AnimationConfig>();
 
+  const [isCommandKOpen, setIsCommandKOpen] = useState(false);
+
   useEffect(() => {
     setHasLoaded?.(true);
   }, [setHasLoaded]);
@@ -28,6 +30,8 @@ export default function AppStateProvider({
         hasLoaded,
         setHasLoaded,
         nextPhotoAnimation,
+        isCommandKOpen,
+        setIsCommandKOpen,
         setNextPhotoAnimation,
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
       }}
