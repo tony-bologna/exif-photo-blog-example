@@ -28,6 +28,7 @@ export default function PhotoSmall({
         'active:brightness-75',
         selected && 'brightness-50',
       )}
+      prefetch={false}
     >
       <ImageSmall
         src={photo.url}
