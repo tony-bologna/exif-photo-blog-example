@@ -17,8 +17,7 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
-import { useAppState } from '@/state/AppState';
-import { getPhotoItemsAction } from '@/photo/actions';
+import { useAppState } from '@/state';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -37,9 +36,11 @@ export type CommandKSection = {
 }
 
 export default function CommandKClient({
+  onQueryChange,
   sections = [],
   footer,
 }: {
+  onQueryChange?: (query: string) => Promise<CommandKSection[]>
   sections?: CommandKSection[]
   footer?: string
 }) {
@@ -96,9 +97,9 @@ export default function CommandKClient({
   }, [setIsOpen]);
 
   useEffect(() => {
-    if (queryDebounced.length >= MINIMUM_QUERY_LENGTH) {
+    if (queryDebounced.length >= MINIMUM_QUERY_LENGTH && !isPending) {
       setIsLoading(true);
-      getPhotoItemsAction(queryDebounced).then(querySections => {
+      onQueryChange?.(queryDebounced).then(querySections => {
         if (isOpenRef.current) {
           setQueriedSections(querySections);
         } else {
@@ -108,7 +109,7 @@ export default function CommandKClient({
         setIsLoading(false);
       });
     }
-  }, [queryDebounced]);
+  }, [queryDebounced, onQueryChange, isPending]);
 
   useEffect(() => {
     if (queryLive === '') {
@@ -181,7 +182,7 @@ export default function CommandKClient({
               placeholder="Search photos, views, settings ..."
               disabled={isPending}
             />
-            {isLoading &&
+            {isLoading && !isPending &&
               <span className={clsx(
                 'absolute top-2.5 right-0 w-8',
                 'flex items-center justify-center translate-y-[2px]',
