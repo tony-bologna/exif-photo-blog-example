@@ -5,7 +5,7 @@ import PhotoTag from '@/tag/PhotoTag';
 import { FaTag } from 'react-icons/fa';
 import { IoMdCamera } from 'react-icons/io';
 import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
-import { TAG_FAVS, TagsWithMeta } from '@/tag';
+import { TAG_FAVS, Tags } from '@/tag';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { FilmSimulations, sortFilmSimulationsWithCount } from '@/simulation';
@@ -18,7 +18,7 @@ export default function PhotoGridSidebar({
   photosCount,
   photosDateRange,
 }: {
-  tags: TagsWithMeta
+  tags: Tags
   cameras: Cameras
   simulations: FilmSimulations
   photosCount: number
@@ -36,7 +36,7 @@ export default function PhotoGridSidebar({
             key={TAG_FAVS}
             countOnHover={count}
             type="icon-last"
-            prefetch={false}
+            contrast="low"
             badged
           />
           : <PhotoTag
@@ -44,7 +44,7 @@ export default function PhotoGridSidebar({
             tag={tag}
             type="text-only"
             countOnHover={count}
-            prefetch={false}
+            contrast="low"
             badged
           />)}
       />}
@@ -62,7 +62,7 @@ export default function PhotoGridSidebar({
               camera={camera}
               type="text-only"
               countOnHover={count}
-              prefetch={false}
+              contrast="low"
               hideAppleIcon
               badged
             />)}
@@ -83,7 +83,6 @@ export default function PhotoGridSidebar({
                 simulation={simulation}
                 countOnHover={count}
                 type="text-only"
-                prefetch={false}
               />
             </div>)}
       />}
