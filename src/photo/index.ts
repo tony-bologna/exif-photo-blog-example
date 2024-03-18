@@ -56,7 +56,7 @@ export interface PhotoDbInsert extends PhotoExif {
   blurData?: string
   title?: string
   caption?: string
-  description?: string
+  semanticDescription?: string
   tags?: string[]
   locationName?: string
   priorityOrder?: number
