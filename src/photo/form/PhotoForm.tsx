@@ -23,7 +23,7 @@ import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
-import { TagsWithMeta, sortTagsObjectWithoutFavs } from '@/tag';
+import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import Spinner from '@/components/Spinner';
 import useImageQuery from '../ai/useImageQuery';
@@ -35,6 +35,7 @@ export default function PhotoForm({
   updatedExifData,
   type = 'create',
   uniqueTags,
+  aiTextGeneration,
   debugBlur,
   onTitleChange,
   onFormStatusChange,
@@ -42,7 +43,8 @@ export default function PhotoForm({
   initialPhotoForm: Partial<PhotoFormData>
   updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
-  uniqueTags?: TagsWithMeta
+  uniqueTags?: Tags
+  aiTextGeneration?: boolean
   debugBlur?: boolean
   onTitleChange?: (updatedTitle: string) => void
   onFormStatusChange?: (pending: boolean) => void
@@ -322,7 +324,8 @@ export default function PhotoForm({
               value: tag,
               annotation: formatCount(count),
               annotationAria: formatCountDescriptive(count, 'tagged'),
-            }))
+            })),
+          aiTextGeneration,
         )
           .map(([key, {
             label,

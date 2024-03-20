@@ -41,6 +41,7 @@ export default function SiteChecklistClient({
   isBlurEnabled,
   isGeoPrivacyEnabled,
   isPriorityOrderEnabled,
+  isAiTextGenerationEnabled,
   isPublicApiEnabled,
   isOgTextBottomAligned,
   gridAspectRatio,
@@ -93,10 +94,16 @@ export default function SiteChecklistClient({
       }}
     />;
 
-  const renderEnvVar = (variable: string) =>
+  const renderEnvVar = (
+    variable: string,
+    minimal?: boolean,
+  ) =>
     <div
       key={variable}
-      className="overflow-x-scroll overflow-y-hidden"
+      className={clsx(
+        'overflow-x-scroll overflow-y-hidden',
+        minimal && 'inline-flex',
+      )}
     >
       <span className="inline-flex items-center gap-1">
         <span className={clsx(
@@ -106,13 +113,13 @@ export default function SiteChecklistClient({
         )}>
           `{variable}`
         </span>
-        {renderCopyButton(variable, variable, true)}
+        {!minimal && renderCopyButton(variable, variable, true)}
       </span>
     </div>;
 
   const renderEnvVars = (variables: string[]) =>
     <div className="py-1 space-y-1">
-      {variables.map(renderEnvVar)}
+      {variables.map(envVar => renderEnvVar(envVar))}
     </div>;
 
   const renderSubStatus = (
@@ -305,6 +312,17 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to disable
           collection/display of location-based data
           {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="AI-generated Text"
+          status={isAiTextGenerationEnabled}
+          isPending={isPendingPage}
+          optional
+        >
+          Store your OpenAI secret key in order to add experimental support
+          for AI-generated text descriptions and enable an invisible field
+          called {'"Semantic Description"'} used to support CMD-K search
+          {renderEnvVars(['OPENAI_SECRET_KEY'])}
         </ChecklistRow>
         <ChecklistRow
           title="Priority Order"

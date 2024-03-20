@@ -3,18 +3,20 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_UPLOADS } from '@/site/paths';
 import { PhotoFormData } from './form';
+import { Tags } from '@/tag';
 import PhotoForm from './form/PhotoForm';
 import { useState } from 'react';
-import { TagsWithMeta } from '@/tag';
 
 export default function UploadPageClient({
   blobId,
   photoFormExif,
   uniqueTags,
+  aiTextGeneration,
 }: {
   blobId?: string
   photoFormExif: Partial<PhotoFormData>
-  uniqueTags: TagsWithMeta
+  uniqueTags: Tags
+  aiTextGeneration: boolean
 }) {
   const [pending, setIsPending] = useState(false);
   const [updatedTitle, setUpdatedTitle] = useState('');
@@ -31,6 +33,7 @@ export default function UploadPageClient({
       <PhotoForm
         initialPhotoForm={photoFormExif}
         uniqueTags={uniqueTags}
+        aiTextGeneration={aiTextGeneration}
         onTitleChange={setUpdatedTitle}
         onFormStatusChange={setIsPending}
       />
