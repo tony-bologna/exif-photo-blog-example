@@ -26,7 +26,7 @@ export default function PhotoFilmSimulation({
       href={pathForFilmSimulation(simulation)}
       icon={<PhotoFilmSimulationIcon
         simulation={simulation}
-        className="translate-y-[-1px]"
+        className="translate-y-[-0.5px]"
       />}
       title={`Film Simulation: ${large}`}
       type={type}
@@ -34,6 +34,7 @@ export default function PhotoFilmSimulation({
       contrast={contrast}
       prefetch={prefetch}
       hoverEntity={countOnHover}
+      iconWide
     />
   );
 }
