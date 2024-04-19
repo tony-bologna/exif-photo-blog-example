@@ -5,6 +5,7 @@ import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
+import { SHOULD_PREFETCH } from '@/site/config';
 
 export default function PhotoSmall({
   photo,
@@ -12,22 +13,26 @@ export default function PhotoSmall({
   camera,
   simulation,
   selected,
+  priority,
+  prefetch = SHOULD_PREFETCH,
 }: {
   photo: Photo
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
   selected?: boolean
+  priority?: boolean
+  prefetch?: boolean
 }) {
   return (
     <Link
       href={pathForPhoto(photo, tag, camera, simulation)}
       className={clsx(
-        'group',
-        'flex relative w-full h-full',
+        'flex w-full h-full',
         'active:brightness-75',
         selected && 'brightness-50',
       )}
+      prefetch={prefetch}
     >
       <ImageSmall
         src={photo.url}
@@ -35,6 +40,7 @@ export default function PhotoSmall({
         blurData={photo.blurData}
         className="w-full"
         alt={altTextForPhoto(photo)}
+        priority={priority}
       />
     </Link>
   );
