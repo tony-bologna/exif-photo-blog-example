@@ -35,7 +35,6 @@ import IconGrSync from '@/site/IconGrSync';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
 import PhotoDate from '@/photo/PhotoDate';
 import { revalidatePath } from 'next/cache';
-import useSwrClear from '@/state/useSwrClear';
 
 const DEBUG_PHOTO_BLOBS = false;
 
@@ -55,8 +54,6 @@ export default async function AdminPhotosPage({
   ]);
 
   const showMorePhotos = count > photos.length;
-
-  const clearSwr = useSwrClear();
 
   return (
     <SiteGrid
@@ -130,7 +127,6 @@ export default async function AdminPhotosPage({
                         `for "${titleForPhoto(photo)}" from source file? ` +
                         'This action cannot be undone.'
                       }
-                      onSubmit={clearSwr}
                     >
                       <input type="hidden" name="id" value={photo.id} />
                       <SubmitButtonWithStatus
@@ -138,13 +134,11 @@ export default async function AdminPhotosPage({
                         onFormSubmitToastMessage={`
                           "${titleForPhoto(photo)}" EXIF data synced
                         `}
-                        onSubmit={clearSwr}
                       />
                     </FormWithConfirm>
                     <FormWithConfirm
                       action={deletePhotoFormAction}
                       confirmText={deleteConfirmationTextForPhoto(photo)}
-                      onSubmit={clearSwr}
                     >
                       <input type="hidden" name="id" value={photo.id} />
                       <input type="hidden" name="url" value={photo.url} />
