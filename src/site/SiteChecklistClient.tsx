@@ -630,7 +630,7 @@ export default function SiteChecklistClient({
               <span className="font-bold">Commit</span>
               &nbsp;&nbsp;
               {commitSha
-                ? <span title={commitMessage}>commitSha</span>
+                ? <span title={commitMessage}>{commitSha}</span>
                 : 'Not Found'}
             </div>
           </div>}
