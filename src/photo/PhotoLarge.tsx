@@ -40,11 +40,13 @@ import { useAppState } from '@/state/AppState';
 
 export default function PhotoLarge({
   photo,
+  className,
   primaryTag,
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   prefetchRelatedLinks = SHOULD_PREFETCH_ALL_LINKS,
   revalidatePhoto,
+  showTitle = true,
   showCamera = true,
   showSimulation = true,
   shouldShare = true,
@@ -57,11 +59,13 @@ export default function PhotoLarge({
   onVisible,
 }: {
   photo: Photo
+  className?: string
   primaryTag?: string
   priority?: boolean
   prefetch?: boolean
   prefetchRelatedLinks?: boolean
   revalidatePhoto?: RevalidatePhoto
+  showTitle?: boolean
   showCamera?: boolean
   showSimulation?: boolean
   shouldShare?: boolean
@@ -87,10 +91,14 @@ export default function PhotoLarge({
 
   const { arePhotosMatted, isUserSignedIn } = useAppState();
 
+  const hasTitle = showTitle && (
+    Boolean(photo.title) ||
+    SHOW_PHOTO_TITLE_FALLBACK_TEXT
+  );
+
   const hasTitleContent =
-    photo.title ||
-    SHOW_PHOTO_TITLE_FALLBACK_TEXT ||
-    photo.caption;
+    hasTitle ||
+    Boolean(photo.caption);
 
   const hasMetaContent =
     showCameraContent ||
@@ -104,6 +112,7 @@ export default function PhotoLarge({
   return (
     <SiteGrid
       containerRef={ref}
+      className={className}
       contentMain={
         <Link
           href={pathForPhoto({ photo })}
@@ -143,7 +152,7 @@ export default function PhotoLarge({
           {/* Meta */}
           <div className="pr-2 md:pr-0">
             <div className="md:relative flex gap-2 items-start">
-              {(photo.title || SHOW_PHOTO_TITLE_FALLBACK_TEXT) &&
+              {hasTitle &&
                 <PhotoLink
                   photo={photo}
                   className="font-bold uppercase flex-grow"
