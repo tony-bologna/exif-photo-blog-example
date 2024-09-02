@@ -19,18 +19,13 @@ import {
 } from '@/site/paths';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/components/ShareButton';
-import DownloadButton from '@/components/DownloadButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import { sortTags } from '@/tag';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
-import {
-  SHOULD_PREFETCH_ALL_LINKS,
-  SHOW_PHOTO_TITLE_FALLBACK_TEXT,
-  ALLOW_PUBLIC_DOWNLOADS,
-} from '@/site/config';
+import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useRef } from 'react';
@@ -91,10 +86,9 @@ export default function PhotoLarge({
 
   const { arePhotosMatted, isUserSignedIn } = useAppState();
 
-  const hasTitle = showTitle && (
-    Boolean(photo.title) ||
-    SHOW_PHOTO_TITLE_FALLBACK_TEXT
-  );
+  const hasTitle =
+    showTitle &&
+    Boolean(photo.title);
 
   const hasTitleContent =
     hasTitle ||
@@ -243,14 +237,6 @@ export default function PhotoLarge({
                   !hasNonDateContent && isUserSignedIn && 'md:pr-7',
                 )}
               />
-              {ALLOW_PUBLIC_DOWNLOADS && 
-                <DownloadButton 
-                  className={clsx(
-                    'md:translate-x-[-2.5px]',
-                    'translate-y-[1.5px] md:translate-y-0',
-                  )}
-                  photo={photo} 
-                />}
               {shouldShare &&
                 <ShareButton
                   className={clsx(
