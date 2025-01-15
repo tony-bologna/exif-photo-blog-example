@@ -56,6 +56,7 @@ export default function PhotoLarge({
   shouldShareFocalLength,
   includeFavoriteInAdminMenu,
   onVisible,
+  enableImageActions = false,
 }: {
   photo: Photo
   className?: string
@@ -76,6 +77,7 @@ export default function PhotoLarge({
   shouldScrollOnShare?: boolean
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
+  enableImageActions?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -153,6 +155,7 @@ export default function PhotoLarge({
               blurDataURL={photo.blurData}
               blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
               priority={priority}
+              enableImageActions={enableImageActions}
             />
           </div>
         </Link>}
