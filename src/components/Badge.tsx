@@ -4,7 +4,7 @@ export default function Badge({
   children,
   type = 'large',
   dimContent,
-  highContrast,
+  contrast = 'low',
   uppercase,
   interactive,
   className,
@@ -12,7 +12,7 @@ export default function Badge({
   children: React.ReactNode
   type?: 'large' | 'small' | 'text-only'
   dimContent?: boolean
-  highContrast?: boolean
+  contrast?: 'low' | 'medium' | 'high' | 'frost'
   uppercase?: boolean
   interactive?: boolean
   className?: string
@@ -30,13 +30,15 @@ export default function Badge({
       return clsx(
         'px-[5px] h-[17px] md:h-[18px]',
         'text-[0.7rem] font-medium rounded-[0.25rem]',
-        highContrast
+        contrast === 'high'
           ? 'text-invert bg-invert'
-          : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
-        interactive && (highContrast
+          : contrast === 'frost'
+            ? 'text-black bg-white/30'
+            : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
+        interactive && (contrast === 'high'
           ? 'hover:opacity-70'
           : 'hover:text-gray-900 dark:hover:text-gray-100'),
-        interactive && (highContrast
+        interactive && (contrast === 'high'
           ? 'active:opacity-90'
           : 'active:bg-gray-200 dark:active:bg-gray-700/60'),
       );
