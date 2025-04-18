@@ -8,6 +8,7 @@ import {
   PATH_OG_SAMPLE,
   PREFIX_PHOTO,
   PREFIX_TAG,
+  PATH_ABOUT
 } from './src/app/paths';
 
 export default function middleware(req: NextRequest, res:NextResponse) {
@@ -31,6 +32,7 @@ export default function middleware(req: NextRequest, res:NextResponse) {
       `${PREFIX_TAG}/${matches?.[1]}`,
       req.url,
     ));
+  } else if (pathname === '/about') {return NextResponse.rewrite(new URL(PATH_ABOUT, req.url));
   }
 
   return auth(

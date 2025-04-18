@@ -13,7 +13,7 @@ import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
 import clsx from 'clsx/lite';
 
-export type SwitcherSelection = 'feed' | 'grid' | 'admin';
+export type SwitcherSelection = 'feed' | 'grid' | 'admin' |'about';
 
 export default function ViewSwitcher({
   currentSelection,
@@ -41,6 +41,14 @@ export default function ViewSwitcher({
       icon={<IconGrid />}
       href={PATH_GRID_INFERRED}
       active={currentSelection === 'grid'}
+      noPadding
+    />;
+
+  const renderItemAbout =
+    <SwitcherItem
+      icon={<IconGrid />}
+      href="/about"
+      active={currentSelection === 'about'}
       noPadding
     />;
 

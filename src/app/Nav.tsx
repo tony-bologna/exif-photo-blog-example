@@ -12,6 +12,8 @@ import {
   isPathGrid,
   isPathProtected,
   isPathSignIn,
+  PATH_ABOUT,
+  isPathAbout,
 } from '@/app/paths';
 import AnimateItems from '../components/AnimateItems';
 import {
@@ -57,6 +59,8 @@ export default function Nav({
       return 'feed';
     } else if (isPathProtected(pathname)) {
       return 'admin';
+    } else if (isPathAbout(pathname)) {
+      return 'about';
     }
   };
 
@@ -94,13 +98,16 @@ export default function Nav({
                 )}>
                   {renderLink(navTitleOrDomain, PATH_ROOT)}
                 </div>
-                {NAV_CAPTION &&
+                {/* {NAV_CAPTION &&
                   <div className={clsx(
                     'hidden sm:block truncate overflow-hidden',
                     'leading-tight',
                   )}>
                     {NAV_CAPTION}
-                  </div>}
+                  </div>} */}
+                  <div className='mr-0'>
+                {renderLink("About", PATH_ABOUT )}
+              </div>
               </div>
             </nav>]
             : []}

@@ -14,6 +14,7 @@ export const PATH_ADMIN               = '/admin';
 export const PATH_API                 = '/api';
 export const PATH_SIGN_IN             = '/sign-in';
 export const PATH_OG                  = '/og';
+export const PATH_ABOUT               = '/about';
 // eslint-disable-next-line max-len
 export const PATH_GRID_INFERRED       = GRID_HOMEPAGE_ENABLED ? PATH_ROOT : PATH_GRID;
 // eslint-disable-next-line max-len
@@ -79,6 +80,7 @@ export const PATHS_TO_CACHE = [
   PATH_ROOT,
   PATH_GRID,
   PATH_FEED,
+  PATH_ABOUT,
   PATH_OG,
   PATH_PHOTO_DYNAMIC,
   PATH_CAMERA_DYNAMIC,
@@ -248,6 +250,9 @@ export const checkPathPrefix = (pathname = '', prefix: string) =>
 
 export const isPathRoot = (pathname?: string) =>
   pathname === PATH_ROOT;
+
+export const isPathAbout = (pathname?: string) =>
+  pathname === PATH_ABOUT;
 
 export const isPathGrid = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_GRID);
