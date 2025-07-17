@@ -13,7 +13,7 @@ export default function AboutPage() {
                 animate={true}>
 
                 <div className='flex-inline mt-8'>
-                    <h1 className='text-3xl'> Mili's About Page </h1>
+                    <h1 className='text-3xl'> Mili&apos;s About Page </h1>
                 </div>
 
                 <div className='flex flex-col  m-16'>

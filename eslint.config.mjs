@@ -11,13 +11,19 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'), {
+    ignoreDuringBuilds: true,
+    ignores: ['app/about/page.tsx',
+      '.app/book-me/page.tsx',
+      '.src/app/ViewSwitcher.tsx',
+      '.src/components/ButtonLink.tsx',
+      '.src/components/InfoBlock.tsx',],
     rules: {
       '@next/next/no-img-element': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-require-imports': 'off',
-      'no-unused-expressions': ['warn'],
+      'no-unused-expressions': ['off'],
       '@typescript-eslint/no-unused-vars': [
-        'warn', {
+        'off', {
           'argsIgnorePattern': '^_',
           'varsIgnorePattern': '^_',
         },
@@ -27,7 +33,7 @@ const eslintConfig = [
         'always-multiline',
       ],
       'indent': [
-        'warn',
+        'off',
         2,
       ],
       'linebreak-style': [

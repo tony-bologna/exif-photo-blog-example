@@ -38,14 +38,15 @@ export default function InfoBlock({
       'dark:bg-gray-900/40 dark:border-gray-800',
       getPaddingClasses(),
       className,
-    )}>
+      )}
+      key="InfoBlock">
       <div className={clsx(
         'flex flex-col justify-center w-full',
         centered && 'items-center',
         'space-y-4',
         'text-medium',
       )}>
-        {children}
+        {children},
       </div>
     </div>
       ]}

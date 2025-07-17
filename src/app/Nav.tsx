@@ -106,7 +106,7 @@ export default function Nav({
                     {NAV_CAPTION}
                   </div>} */}
                   <div className='mr-0'>
-                {renderLink("About", PATH_ABOUT )}
+                {renderLink('About', PATH_ABOUT )}
               </div>
               </div>
             </nav>]
