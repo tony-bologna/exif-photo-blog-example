@@ -3,11 +3,7 @@
 const INTRINSIC_WIDTH = 28;
 const INTRINSIC_HEIGHT = 24;
 
-<<<<<<<< HEAD:src/components/icons/IconFeed.tsx
 export default function IconFeed({
-========
-export default function IconFull({
->>>>>>>> upstream/main:src/components/icons/IconFull.tsx
   width = INTRINSIC_WIDTH,
   includeTitle = true,
   className,
