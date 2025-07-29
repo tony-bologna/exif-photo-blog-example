@@ -8,7 +8,6 @@ export default function Badge({
   contrast = 'low',
   uppercase,
   interactive,
-  className,
 }: {
   children: React.ReactNode
   className?: string
@@ -17,7 +16,6 @@ export default function Badge({
   contrast?: 'low' | 'medium' | 'high' | 'frosted'
   uppercase?: boolean
   interactive?: boolean
-  className?: string
 }) {
   const stylesForType = () => {
     switch (type) {
