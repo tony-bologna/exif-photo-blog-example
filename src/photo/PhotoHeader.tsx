@@ -12,21 +12,23 @@ import ShareButton from '@/share/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
 import { ReactNode } from 'react';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
-import PhotoPrevNext from './PhotoPrevNext';
+import PhotoPrevNextActions from './PhotoPrevNextActions';
 import PhotoLink from './PhotoLink';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { GRID_GAP_CLASSNAME } from '@/components';
+import { useAppText } from '@/i18n/state/client';
 
 export default function PhotoHeader({
   photos,
   selectedPhoto,
   entity,
-  entityVerb = 'PHOTO',
+  entityVerb: _entityVerb,
   entityDescription,
   indexNumber,
   count,
   dateRange,
+  hasAiTextGeneration,
   includeShareButton,
   ...categories
 }: {
@@ -38,9 +40,14 @@ export default function PhotoHeader({
   indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
+  hasAiTextGeneration: boolean
   includeShareButton?: boolean
 } & PhotoSetCategory) {
   const { isGridHighDensity } = useAppState();
+
+  const appText = useAppText();
+
+  const entityVerb = _entityVerb ?? appText.photo.photo.toLocaleUpperCase();
 
   const { start, end } = dateRangeForPhotos(photos, dateRange);
 
@@ -48,9 +55,8 @@ export default function PhotoHeader({
     ? photos.findIndex(photo => photo.id === selectedPhoto.id)
     : undefined;
 
-  const paginationLabel =
-    (indexNumber || (selectedPhotoIndex ?? 0 + 1)) + ' of ' +
-    (count ?? photos.length);
+  const paginationIndex = indexNumber || (selectedPhotoIndex ?? 0 + 1);
+  const paginationCount = count ?? photos.length;
 
   const headerType = selectedPhotoIndex === undefined
     ? 'photo-set'
@@ -59,9 +65,10 @@ export default function PhotoHeader({
       : 'photo-detail';
 
   const renderPrevNext =
-    <PhotoPrevNext {...{
+    <PhotoPrevNextActions {...{
       photo: selectedPhoto,
       photos,
+      hasAiTextGeneration,
       ...categories,
     }} />;
 
@@ -102,12 +109,12 @@ export default function PhotoHeader({
           'inline-flex uppercase',
           headerType === 'photo-set'
             ? isGridHighDensity
-              ? 'col-span-2 sm:col-span-1 lg:col-span-2'
-              : 'col-span-2 sm:col-span-1'
+              ? 'col-span-2 lg:col-span-3'
+              : 'col-span-2 md:col-span-1 lg:col-span-2'
             : headerType === 'photo-detail-with-entity'
               ? isGridHighDensity
-                ? 'col-span-2 sm:col-span-1 lg:col-span-2'
-                : 'col-span-2 sm:col-span-1'
+                ? 'col-span-2 lg:col-span-3'
+                : 'col-span-2 md:col-span-1 lg:col-span-2'
               : isGridHighDensity
                 ? 'col-span-3 sm:col-span-3 lg:col-span-5 w-[110%] xl:w-full'
                 : 'col-span-3 md:col-span-2 lg:col-span-3 w-[110%] xl:w-full',
@@ -124,16 +131,16 @@ export default function PhotoHeader({
         </div>
         {/* Content B: Filter Set Meta or Photo Pagination */}
         <div className={clsx(
-          'inline-flex gap-2 self-start',
+          'inline-flex gap-1 self-start',
           'uppercase text-dim',
           headerType === 'photo-set'
             ? isGridHighDensity
-              ? 'col-span-2 lg:col-span-3'
-              : 'col-span-2 md:col-span-1 lg:col-span-2'
+              ? 'col-span-2 sm:col-span-1 lg:col-span-2'
+              : 'col-span-2 sm:col-span-1'
             : headerType === 'photo-detail-with-entity'
               ? isGridHighDensity
-                ? 'sm:col-span-2 lg:col-span-3'
-                : 'sm:col-span-2 md:col-span-1 lg:col-span-2'
+                ? 'col-span-1 lg:col-span-2'
+                : 'col-span-1'
               : 'hidden!',
         )}>
           {entity && <>
@@ -146,13 +153,21 @@ export default function PhotoHeader({
                     ...categories,
                     count,
                     dateRange,
-                    className: 'translate-y-[1.5px]',
+                    className: 'translate-x-[1px] translate-y-[1.5px] w-4',
                     prefetch: true,
                     dim: true,
                   }} />}
               </>
-              : <ResponsiveText shortText={paginationLabel}>
-                {entityVerb} {paginationLabel}
+              : <ResponsiveText
+                shortText={appText.utility.paginate(
+                  paginationIndex,
+                  paginationCount,
+                )}
+              >
+                {appText.utility.paginateAction(
+                  paginationIndex,
+                  paginationCount,
+                  entityVerb)}
               </ResponsiveText>}
           </>}
         </div>
@@ -162,6 +177,8 @@ export default function PhotoHeader({
             ? 'hidden sm:flex'
             : 'flex',
           'justify-end',
+          // Make full height for prev/next symbols
+          'max-sm:h-full',
         )}>
           {selectedPhoto
             ? renderPrevNext

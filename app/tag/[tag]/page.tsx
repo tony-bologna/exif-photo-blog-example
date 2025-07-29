@@ -1,6 +1,6 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueTags } from '@/photo/db/query';
-import { PATH_ROOT } from '@/app/paths';
+import { PATH_ROOT } from '@/app/path';
 import { generateMetaForTag } from '@/tag';
 import TagOverview from '@/tag/TagOverview';
 import { getPhotosTagDataCached } from '@/tag/data';
@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
+import { getAppText } from '@/i18n/state/server';
 
 const getPhotosTagDataCachedCached = cache((tag: string) =>
   getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_INITIAL}));
@@ -37,12 +38,14 @@ export async function generateMetadata({
 
   if (photos.length === 0) { return {}; }
 
+  const appText = await getAppText();
+
   const {
     url,
     title,
     description,
     images,
-  } = generateMetaForTag(tag, photos, count, dateRange);
+  } = generateMetaForTag(tag, photos, appText, count, dateRange);
 
   return {
     title,

@@ -9,7 +9,7 @@ import { COLLAPSE_SIDEBAR_CATEGORIES } from '@/app/config';
 
 export default function HeaderList({
   title,
-  className,
+  className = 'space-y-1',
   icon,
   items,
   maxItems = 5,

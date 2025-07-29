@@ -1,17 +1,18 @@
 'use client';
 
-import { ReactNode, ComponentProps } from 'react';
+import { ReactNode, ComponentProps, RefObject } from 'react';
 import { Photo, titleForPhoto } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { AnimationConfig } from '../components/AnimateItems';
-import { useAppState } from '@/state/AppState';
-import { pathForPhoto } from '@/app/paths';
+import { useAppState } from '@/app/AppState';
+import { pathForPhoto } from '@/app/path';
 import { clsx } from 'clsx/lite';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
-import LinkWithLoaderBadge from '@/components/LinkWithLoaderBadge';
+import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
 
 export default function PhotoLink({
+  ref,
   photo,
   scroll,
   prefetch,
@@ -21,6 +22,7 @@ export default function PhotoLink({
   loaderType = 'spinner',
   ...categories
 }: {
+  ref?: RefObject<HTMLAnchorElement | null>
   photo?: Photo
   scroll?: boolean
   prefetch?: boolean
@@ -35,6 +37,7 @@ export default function PhotoLink({
     Omit<ComponentProps<typeof LinkWithStatus>, 'children'> |
     undefined = photo
       ? {
+        ref,
         className,
         href: pathForPhoto({ photo, ...categories }),
         onClick: () => {
@@ -63,12 +66,12 @@ export default function PhotoLink({
             </>}
           </>}
         </LinkWithStatus>
-        : <LinkWithLoaderBadge
+        : <LinkWithLoaderBackground
           {...linkProps}
           offsetPadding
         >
           {children}
-        </LinkWithLoaderBadge>
+        </LinkWithLoaderBackground>
       : <span className={clsx(
         'text-gray-300 dark:text-gray-700 cursor-default',
         className,

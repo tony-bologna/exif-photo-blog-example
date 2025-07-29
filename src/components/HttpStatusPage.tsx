@@ -1,14 +1,14 @@
 import { ReactNode } from 'react';
 import AppGrid from './AppGrid';
 import { clsx } from 'clsx/lite';
-import { PATH_ROOT } from '@/app/paths';
+import { PATH_ROOT } from '@/app/path';
 import Link from 'next/link';
 
 export default function HttpStatusPage({
   status,
   children,
 }: {
-  status: number
+  status: ReactNode
   children?: ReactNode
 }) {
   return (

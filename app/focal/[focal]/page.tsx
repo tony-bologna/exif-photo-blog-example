@@ -3,11 +3,12 @@ import FocalLengthOverview from '@/focal/FocalLengthOverview';
 import { getPhotosFocalLengthDataCached } from '@/focal/data';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueFocalLengths } from '@/photo/db/query';
-import { PATH_ROOT } from '@/app/paths';
+import { PATH_ROOT } from '@/app/path';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
+import { getAppText } from '@/i18n/state/server';
 
 const getPhotosFocalDataCachedCached = cache((focal: number) =>
   getPhotosFocalLengthDataCached({
@@ -41,12 +42,14 @@ export async function generateMetadata({
 
   if (photos.length === 0) { return {}; }
 
+  const appText = await getAppText();
+
   const {
     url,
     title,
     description,
     images,
-  } = generateMetaForFocalLength(focal, photos, count, dateRange);
+  } = generateMetaForFocalLength(focal, photos, appText, count, dateRange);
 
   return {
     title,

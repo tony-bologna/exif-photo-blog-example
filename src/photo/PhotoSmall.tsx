@@ -7,7 +7,7 @@ import { PhotoSetCategory } from '../category';
 import ImageSmall from '@/components/image/ImageSmall';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
-import { pathForPhoto } from '@/app/paths';
+import { pathForPhoto } from '@/app/path';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
 import { useRef } from 'react';
 import useVisible from '@/utility/useVisible';
@@ -17,6 +17,7 @@ export default function PhotoSmall({
   selected,
   className,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
+  forceFallbackFade,
   onVisible,
   ...categories
 }: {
@@ -24,6 +25,7 @@ export default function PhotoSmall({
   selected?: boolean
   className?: string
   prefetch?: boolean
+  forceFallbackFade?: boolean
   onVisible?: () => void
 } & PhotoSetCategory) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -50,6 +52,7 @@ export default function PhotoSmall({
         blurDataURL={photo.blurData}
         blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
         alt={altTextForPhoto(photo)}
+        forceFallbackFade={forceFallbackFade}
       />
     </Link>
   );

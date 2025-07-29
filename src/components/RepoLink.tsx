@@ -1,17 +1,18 @@
 import { TEMPLATE_REPO_NAME, TEMPLATE_REPO_URL } from '@/app/config';
+import { useAppText } from '@/i18n/state/client';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { BiLogoGithub } from 'react-icons/bi';
 
 export default function RepoLink() {
+  const appText = useAppText();
   return (
-    <span className="flex items-center gap-2 whitespace-nowrap">
-      <span className=''>
-        Made with 🩷 <div className='hidden sm:inline-block'> & maintained</div> by 
+    <span className="inline-flex items-center gap-2 whitespace-nowrap">
+      <span className="hidden sm:inline-block">
+        {appText.misc.repo}
       </span>
-
-        <Link
-        href="http://github.com/sambecker/exif-photo-blog"
+      <Link
+        href={TEMPLATE_REPO_URL}
         target="_blank"
         className={clsx(
           'gap-0.5 break-normal',
@@ -31,7 +32,7 @@ export default function RepoLink() {
           'hidden',
           'sm:flex items-center gap-0.5',
           'text-main hover:text-main',
-          'hover:underline',
+          'hover:text-medium active:text-dim',
         )}
       >
         <BiLogoGithub

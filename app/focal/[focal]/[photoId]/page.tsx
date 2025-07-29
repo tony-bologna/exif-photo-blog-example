@@ -9,7 +9,7 @@ import {
   PATH_ROOT,
   absolutePathForPhoto,
   absolutePathForPhotoImage,
-} from '@/app/paths';
+} from '@/app/path';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCached, getPhotosMetaCached } from '@/photo/cache';
 import { cache } from 'react';
@@ -38,12 +38,13 @@ export async function generateMetadata({
 
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
+  const descriptionHtml = descriptionForPhoto(photo, true);
   const images = absolutePathForPhotoImage(photo);
   const url = absolutePathForPhoto({ photo, focal });
 
   return {
     title,
-    description,
+    description: descriptionHtml,
     openGraph: {
       title,
       images,

@@ -7,18 +7,23 @@ import PhotoGrid from './PhotoGrid';
 import TagHeader from '@/tag/TagHeader';
 import CameraHeader from '@/camera/CameraHeader';
 import FilmHeader from '@/film/FilmHeader';
-import { TAG_HIDDEN } from '@/tag';
-import HiddenHeader from '@/tag/HiddenHeader';
+import { TAG_PRIVATE } from '@/tag';
+import PrivateHeader from '@/tag/PrivateHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
 import PhotoHeader from './PhotoHeader';
 import RecipeHeader from '@/recipe/RecipeHeader';
 import { ReactNode } from 'react';
 import LensHeader from '@/lens/LensHeader';
+import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import YearHeader from '@/years/YearHeader';
+import RecentsHeader from '@/recents/RecentsHeader';
 
 export default function PhotoDetailPage({
   photo,
   photos,
   photosGrid,
+  recent,
+  year,
   tag,
   camera,
   lens,
@@ -43,8 +48,8 @@ export default function PhotoDetailPage({
   let customHeader: ReactNode | undefined;
 
   if (tag) {
-    customHeader = tag === TAG_HIDDEN
-      ? <HiddenHeader
+    customHeader = tag === TAG_PRIVATE
+      ? <PrivateHeader
         photos={photos}
         selectedPhoto={photo}
         indexNumber={indexNumber}
@@ -59,6 +64,23 @@ export default function PhotoDetailPage({
         count={count}
         dateRange={dateRange}
       />;
+  } else if (year) {
+    customHeader = <YearHeader
+      year={year}
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
+  } else if (recent) {
+    customHeader = <RecentsHeader
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
   } else if (camera) {
     customHeader = <CameraHeader
       camera={camera}
@@ -113,6 +135,7 @@ export default function PhotoDetailPage({
           selectedPhoto={photo}
           photos={photos}
           recipe={recipe}
+          hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
         />}
       />
       <AnimateItems
@@ -125,6 +148,8 @@ export default function PhotoDetailPage({
             primaryTag={tag}
             priority
             prefetchRelatedLinks
+            recent={recent}
+            year={year}
             showTitle={Boolean(customHeader)}
             showTitleAsH1
             showCamera={!camera}
@@ -132,6 +157,8 @@ export default function PhotoDetailPage({
             showFilm={!film}
             showRecipe={!recipe}
             shouldShare={shouldShare}
+            shouldShareRecents={recent !== undefined}
+            shouldShareYear={year !== undefined}
             shouldShareCamera={camera !== undefined}
             shouldShareLens={lens !== undefined}
             shouldShareTag={tag !== undefined}
@@ -139,11 +166,11 @@ export default function PhotoDetailPage({
             shouldShareRecipe={recipe !== undefined}
             shouldShareFocalLength={focal !== undefined}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
+            showAdminKeyCommands
           />,
         ]}
       />
       <AppGrid
-        sideFirstOnMobile
         contentMain={<PhotoGrid
           photos={photosGrid ?? photos}
           selectedPhoto={photo}
@@ -151,6 +178,7 @@ export default function PhotoDetailPage({
           camera={camera}
           film={film}
           focal={focal}
+          year={year}
           animateOnFirstLoadOnly
         />}
       />

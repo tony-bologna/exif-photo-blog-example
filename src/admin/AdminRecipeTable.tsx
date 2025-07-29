@@ -5,16 +5,18 @@ import { Fragment } from 'react';
 import DeleteFormButton from '@/admin/DeleteFormButton';
 import { photoQuantityText } from '@/photo';
 import EditButton from '@/admin/EditButton';
-import { pathForAdminRecipeEdit } from '@/app/paths';
+import { pathForAdminRecipeEdit } from '@/app/path';
 import { clsx } from 'clsx/lite';
 import { formatRecipe, Recipes, sortRecipes } from '@/recipe';
 import AdminRecipeBadge from './AdminRecipeBadge';
+import { getAppText } from '@/i18n/state/server';
 
-export default function AdminRecipeTable({
+export default async function AdminRecipeTable({
   recipes,
 }: {
   recipes: Recipes
 }) {
+  const appText = await getAppText();
   return (
     <AdminTable>
       {sortRecipes(recipes).map(({ recipe, count }) =>
@@ -31,7 +33,7 @@ export default function AdminRecipeTable({
               action={deletePhotoRecipeGloballyAction}
               confirmText={
                 // eslint-disable-next-line max-len
-                `Are you sure you want to remove "${formatRecipe(recipe)}" from ${photoQuantityText(count, false).toLowerCase()}?`}
+                `Are you sure you want to remove "${formatRecipe(recipe)}" from ${photoQuantityText(count, appText, false, false).toLowerCase()}?`}
             >
               <input type="hidden" name="recipe" value={recipe} />
               <DeleteFormButton clearLocalState />

@@ -22,11 +22,12 @@ export const parameterize = (
 ) =>
   string
     .trim()
-    // Replaces spaces, underscores, slashes,and dashes with dashes
-    .replaceAll(/[\s_–—]/gi, '-')
-    // Removes punctuation
-    .replaceAll(/['"!@#$%^&*()_+=[\]{};:/?,<>\\/|`~]/gi, '')
-    // Removes all non-alphanumeric characters
+    // Replace spaces, underscores, slashes, pluses, pipes, dashes with dashes
+    .replaceAll(/[\s_–—+&|]/gi, '-')
+    // Remove punctuation
+    .replaceAll(/['"!@#$%^*()=[\]{};:/?,<>\\/`~]/gi, '')
+    // Removes non-alphanumeric characters, if configured
+    // (breaks i18m)
     .replaceAll(
       shouldRemoveNonAlphanumeric
         ? /([^a-z0-9-])/gi
@@ -34,6 +35,14 @@ export const parameterize = (
       '',
     )
     .toLocaleLowerCase();
+
+export const formatStringForXml = (string: string) =>
+  string
+    .replace(/&/g, '&amp;')
+    .replace(/'/g, '&apos;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 
 export const deparameterize = (string: string) =>
   capitalizeWords(string.replaceAll('-', ' '));

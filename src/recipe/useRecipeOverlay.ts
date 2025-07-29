@@ -1,11 +1,6 @@
-import {
-  getPathComponents,
-  pathForPhoto,
-} from '@/app/paths';
-import { usePathname } from 'next/navigation';
-import { RefObject, useCallback, useEffect, useState } from 'react';
-import { isElementEntirelyInViewport } from '@/utility/dom';
+import { RefObject, useCallback, useMemo, useState } from 'react';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
+import useScrollIntoView from '@/utility/useScrollIntoView';
 
 export default function useRecipeOverlay({
   ref,
@@ -14,67 +9,31 @@ export default function useRecipeOverlay({
   ref?: RefObject<HTMLElement | null>,
   refTriggers?: RefObject<HTMLElement | null>[],
 }) {
-  const pathname = usePathname();
-
-  const {
-    photoId,
-    ...pathComponents
-  } = getPathComponents(pathname);
-
-  const [shouldShowRecipeOverlay, setShouldShowRecipeOverlay] = useState(false);
-
-  const setVisibility = useCallback((shouldShow: boolean) => {
-    if (shouldShow) {
-      setShouldShowRecipeOverlay(true);
-      // Only add query param for photo details
-      if (photoId) {
-        window.history.pushState(
-          null,
-          '',
-          pathForPhoto({
-            photo: photoId,
-            ...pathComponents,
-            showRecipe: true,
-          }),
-        );
-      }
-    } else {
-      setShouldShowRecipeOverlay(false);
-      // Only remove query param for photo details
-      if (photoId) {
-        window.history.pushState(
-          null,
-          '',
-          pathForPhoto({
-            photo: photoId,
-            ...pathComponents,
-          }),
-        );
-      }
-    }
-  }, [pathComponents, photoId]);
+  const [isShowingRecipeOverlay, setIsShowingRecipeOverlay] = useState(false);
 
   const showRecipeOverlay =
-    useCallback(() => setVisibility(true), [setVisibility]);
+    useCallback(() => setIsShowingRecipeOverlay(true), []);
   const hideRecipeOverlay =
-    useCallback(() => setVisibility(false), [setVisibility]);
+    useCallback(() => setIsShowingRecipeOverlay(false), []);
   const toggleRecipeOverlay = useCallback(() =>
-    setVisibility(!shouldShowRecipeOverlay),
-  [setVisibility, shouldShowRecipeOverlay]);
+    setIsShowingRecipeOverlay(current => !current),
+  []);
+
+  const htmlElements = useMemo(() =>
+    [ref, ...refTriggers], [ref, refTriggers]);
 
   useClickInsideOutside({
-    htmlElements: [ref, ...refTriggers],
+    htmlElements,
     onClickOutside: hideRecipeOverlay,
   });
 
-  useEffect(() => {
-    if (shouldShowRecipeOverlay && !isElementEntirelyInViewport(ref?.current)) {
-      ref?.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [ref, shouldShowRecipeOverlay]);
+  useScrollIntoView({
+    ref,
+    shouldScrollIntoView: isShowingRecipeOverlay,
+  });
 
   return {
-    shouldShowRecipeOverlay,
+    isShowingRecipeOverlay,
     showRecipeOverlay,
     hideRecipeOverlay,
     toggleRecipeOverlay,

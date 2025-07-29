@@ -4,7 +4,6 @@ import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
 import { dateRangeForPhotos } from '@/photo';
 import { FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
-import { HiMiniArrowsUpDown } from 'react-icons/hi2';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 import { TbSparkles } from 'react-icons/tb';
@@ -28,7 +27,7 @@ import {
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
-import { PATH_ADMIN_OUTDATED } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/path';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
@@ -36,7 +35,7 @@ import AdminLink from '../AdminLink';
 import AdminEmptyState from '../AdminEmptyState';
 import { pluralize } from '@/utility/string';
 import Tooltip from '@/components/Tooltip';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import ScoreCardContainer from '@/components/ScoreCardContainer';
 import IconLens from '@/components/icons/IconLens';
 import IconCamera from '@/components/icons/IconCamera';
@@ -46,11 +45,12 @@ import IconFocalLength from '@/components/icons/IconFocalLength';
 import IconTag from '@/components/icons/IconTag';
 import IconPhoto from '@/components/icons/IconPhoto';
 import { HiOutlineDocumentText } from 'react-icons/hi';
+import { ReactNode } from 'react';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
 const DEBUG_BEHIND_BY = 9;
-const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
+const DEBUG_PHOTOS_NEED_SYNC_COUNT = 7;
 
 const TEXT_COLOR_WARNING  = 'text-amber-600 dark:text-amber-500';
 const TEXT_COLOR_BLUE     = 'text-blue-600 dark:text-blue-500';
@@ -91,7 +91,7 @@ export default function AdminAppInsightsClient({
   photoStats: {
     photosCount,
     photosCountHidden,
-    photosCountOutdated,
+    photosCountNeedSync,
     camerasCount,
     lensesCount,
     tagsCount,
@@ -114,9 +114,8 @@ export default function AdminAppInsightsClient({
     noAiRateLimiting,
     noConfiguredDomain,
     noConfiguredMeta,
-    outdatedPhotos,
+    photosNeedSync,
     photoMatting,
-    camerasFirst,
     gridFirst,
     noStaticOptimization,
   } = insights;
@@ -131,6 +130,13 @@ export default function AdminAppInsightsClient({
     {codeMeta?.branch ?? TEMPLATE_REPO_BRANCH}
   </a>;
 
+  const renderTooltipContent = (content: ReactNode) =>
+    <Tooltip
+      content={content}
+      classNameTrigger="ml-1.5"
+      supportMobile
+    />;
+
   return (
     <ScoreCardContainer>
       {(codeMeta || debug) && <>
@@ -143,11 +149,9 @@ export default function AdminAppInsightsClient({
               />}
               content={<>
                 <span>Could not analyze source code</span>
-                <Tooltip
-                  content="Could not connect to GitHub API. Try refreshing."
-                  classNameTrigger="translate-y-[-1.5px] ml-2 h-3"
-                  supportMobile
-                />
+                {renderTooltipContent(
+                  'Could not connect to GitHub API. Try refreshing.',
+                )}
               </>}
             />}
           {((!codeMeta?.didError && noFork) || debug) &&
@@ -283,7 +287,7 @@ export default function AdminAppInsightsClient({
                 to behave unexpectedly. Domains are stored in
                 {' '}
                 <EnvVar
-                  variable="NEXT_PUBLIC_SITE_DOMAIN"
+                  variable="NEXT_PUBLIC_DOMAIN"
                   trailingContent="."
                 />
               </>}
@@ -379,23 +383,6 @@ export default function AdminAppInsightsClient({
                 />
               </>}
             />}
-            {(camerasFirst || debug) && <ScoreCardRow
-              icon={<HiMiniArrowsUpDown
-                size={17}
-                className="translate-x-[-1px]"
-              />}
-              content="Move cameras above tags in sidebar"
-              expandContent={<>
-                Now that you have more than a few tags, consider
-                showing cameras first in the sidebar by setting
-                {' '}
-                <EnvVar
-                  variable="NEXT_PUBLIC_CATEGORY_VISIBILITY"
-                  value="cameras, tags, recipes, films"
-                  trailingContent="."
-                />
-              </>}
-            />}
             {(gridFirst || debug) && <ScoreCardRow
               icon={<IoMdGrid size={18} className="translate-y-[-1px]" />}
               content="Grid homepage"
@@ -417,7 +404,7 @@ export default function AdminAppInsightsClient({
           </AdminEmptyState>}
       </ScoreCard>
       <ScoreCard title="Library Stats">
-        {(outdatedPhotos || debug) && <ScoreCardRow
+        {(photosNeedSync || debug) && <ScoreCardRow
           icon={<LiaBroomSolid
             size={19}
             className={clsx(
@@ -425,14 +412,21 @@ export default function AdminAppInsightsClient({
               TEXT_COLOR_BLUE,
             )}
           />}
-          content={renderHighlightText(
-            pluralize(
-              photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED,
-              'outdated photo',
-            ),
-            'blue',
-          )}
-          expandPath={PATH_ADMIN_OUTDATED}
+          content={<>
+            {renderHighlightText(
+              pluralize(
+                photosCountNeedSync || DEBUG_PHOTOS_NEED_SYNC_COUNT,
+                'photo',
+              ),
+              'blue',
+            )}
+            {' '}
+            with updates
+            {renderTooltipContent(<>
+              Missing data or AI&#8209;generated text
+            </>)}
+          </>}
+          expandPath={PATH_ADMIN_PHOTOS_UPDATES}
         />}
         <ScoreCardRow
           icon={<IconPhoto

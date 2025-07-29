@@ -2,6 +2,7 @@ import { clsx } from 'clsx/lite';
 
 export default function Badge({
   children,
+  className,
   type = 'large',
   dimContent,
   contrast = 'low',
@@ -10,6 +11,7 @@ export default function Badge({
   className,
 }: {
   children: React.ReactNode
+  className?: string
   type?: 'large' | 'small' | 'text-only'
   dimContent?: boolean
   contrast?: 'low' | 'medium' | 'high' | 'frosted'

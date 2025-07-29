@@ -15,6 +15,11 @@
   }
 }
 
+html {
+  /* Necessary for nextjs scroll restoration */
+  min-height: 100%;
+}
+
 @theme {
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
@@ -37,33 +42,32 @@
   --text-3xl--line-height: 1.5rem;
 
   --animate-fade-in: fade-in 0.5s linear both running;
+  --animate-fade-in-fast: fade-in 0.2s linear both running;
   @keyframes fade-in {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
 
-  --animate-fade-in-from-top: fade-in-from-top 0.25s ease-in-out;
+  --animate-fade-in-from-top: fade-in-from-top 0.2s ease-out;
+  --animate-fade-in-from-top-large: fade-in-from-top-large 0.2s ease-out;
   @keyframes fade-in-from-top {
-    0% {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-from-top-large {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
-  --animate-fade-in-from-bottom: fade-in-from-bottom 0.25s ease-in-out;
+  --animate-fade-in-from-bottom: fade-in-from-bottom 0.2s ease-out;
+  --animate-fade-in-from-bottom-large: fade-in-from-bottom-large 0.2s ease-out;
   @keyframes fade-in-from-bottom {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-from-bottom-large {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
   --animate-rotate-pulse: rotate-pulse 0.75s linear infinite normal both running;
@@ -101,7 +105,6 @@
 @utility text-light {
   @apply text-gray-100
 }
-
 /* Text */
 @utility text-main {
   @apply
@@ -135,22 +138,26 @@
   @apply
     text-red-500 dark:text-red-400
 }
-/* Border */
+/* Rules */
 @utility border-main {
   @apply
     border border-gray-200 dark:border-gray-700
 }
 @utility divide-main {
   @apply
-    divide-gray-200 dark:divide-gray-700
+    divide-gray-400/25 dark:divide-gray-700
 }
 @utility border-medium {
   @apply
-    border border-gray-200 dark:border-gray-800
+    border border-gray-400/25 dark:border-gray-800
+}
+@utility outline-medium {
+  @apply
+    outline outline-gray-400/25 dark:outline-gray-800
 }
 @utility divide-medium {
   @apply
-    divide-gray-200 dark:divide-gray-800
+    divide-gray-400/25 dark:divide-gray-800
 }
 /* Background */
 @utility bg-main {
@@ -159,11 +166,11 @@
 }
 @utility bg-medium {
   @apply
-    bg-gray-200 dark:bg-gray-700
+    bg-gray-200 dark:bg-gray-700/65
 }
 @utility bg-dim {
   @apply
-    bg-gray-100 dark:bg-gray-900/75
+    bg-gray-100 dark:bg-gray-800/70
 }
 @utility bg-extra-dim {
   @apply
@@ -171,7 +178,8 @@
 }
 @utility bg-content {
   @apply
-    bg-main border-medium
+    /* '!' necessary for radix controls */
+    bg-main outline-medium!
 }
 @utility bg-invert {
   @apply
@@ -277,10 +285,11 @@
   input[type=checkbox] {
     @apply
       rounded-md
+      dark:bg-transparent
   }
   .error {
     @apply
-      border-red-500 dark:border-red-400
+      outline-2 outline-red-500! dark:outline-red-400!
   }
   button, .button {
     @apply
@@ -329,6 +338,7 @@
   a, .link {
     @apply
       hover:text-medium
+      active:text-dim
   }
 }
 

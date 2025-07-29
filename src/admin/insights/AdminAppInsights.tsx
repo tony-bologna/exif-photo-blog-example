@@ -6,28 +6,16 @@ import {
   getUniqueLenses,
   getUniqueRecipes,
   getUniqueTags,
+  getPhotosInNeedOfSyncCount,
 } from '@/photo/db/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
-import {
-  APP_CONFIGURATION,
-  CATEGORY_VISIBILITY,
-  GRID_HOMEPAGE_ENABLED,
-  HAS_STATIC_OPTIMIZATION,
-  IS_META_TITLE_CONFIGURED,
-  IS_META_DESCRIPTION_CONFIGURED,
-  MATTE_PHOTOS,
-} from '@/app/config';
-import { getGitHubMetaForCurrentApp, getSignificantInsights } from '.';
-import { getOutdatedPhotosCount } from '@/photo/db/query';
-
-const BASIC_PHOTO_INSTALLATION_COUNT = 32;
-const TAG_COUNT_THRESHOLD = 12;
+import { getAllInsights, getGitHubMetaForCurrentApp } from '.';
 
 export default async function AdminAppInsights() {
   const [
     { count: photosCount, dateRange },
     { count: photosCountHidden },
-    photosCountOutdated,
+    photosCountNeedSync,
     { count: photosCountPortrait },
     codeMeta,
     cameras,
@@ -39,7 +27,7 @@ export default async function AdminAppInsights() {
   ] = await Promise.all([
     getPhotosMeta({ hidden: 'include' }),
     getPhotosMeta({ hidden: 'only' }),
-    getOutdatedPhotosCount(),
+    getPhotosInNeedOfSyncCount(),
     getPhotosMeta({ maximumAspectRatio: 0.9 }),
     getGitHubMetaForCurrentApp(),
     getUniqueCameras(),
@@ -49,47 +37,20 @@ export default async function AdminAppInsights() {
     getUniqueFilms(),
     getUniqueFocalLengths(),
   ]);
-  
-  const { isAiTextGenerationEnabled } = APP_CONFIGURATION;
-
-  const {
-    forkBehind,
-    noAiRateLimiting,
-    noConfiguredDomain,
-    outdatedPhotos,
-  } = getSignificantInsights({
-    codeMeta,
-    photosCountOutdated,
-  });
 
   return (
     <AdminAppInsightsClient
       codeMeta={codeMeta}
-      insights={{
-        noFork: !codeMeta?.isForkedFromBase && !codeMeta?.isBaseRepo,
-        forkBehind,
-        noAi: !isAiTextGenerationEnabled,
-        noAiRateLimiting,
-        noConfiguredDomain,
-        noConfiguredMeta:
-          !IS_META_TITLE_CONFIGURED ||
-          !IS_META_DESCRIPTION_CONFIGURED,
-        outdatedPhotos,
-        photoMatting: photosCountPortrait > 0 && !MATTE_PHOTOS,
-        camerasFirst: (
-          tags.length > TAG_COUNT_THRESHOLD &&
-          CATEGORY_VISIBILITY[0] !== 'cameras'
-        ),
-        gridFirst: (
-          photosCount >= BASIC_PHOTO_INSTALLATION_COUNT &&
-          !GRID_HOMEPAGE_ENABLED
-        ),
-        noStaticOptimization: !HAS_STATIC_OPTIMIZATION,
-      }}
+      insights={getAllInsights({
+        codeMeta,
+        photosCount,
+        photosCountNeedSync,
+        photosCountPortrait,
+      })}
       photoStats={{
         photosCount,
         photosCountHidden,
-        photosCountOutdated,
+        photosCountNeedSync,
         camerasCount: cameras.length,
         lensesCount: lenses.length,
         tagsCount: tags.length,

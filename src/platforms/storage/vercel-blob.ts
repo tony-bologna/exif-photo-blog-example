@@ -1,4 +1,4 @@
-import { PATH_API_VERCEL_BLOB_UPLOAD } from '@/app/paths';
+import { PATH_API_VERCEL_BLOB_UPLOAD } from '@/app/path';
 import { copy, del, list, put } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 import { fileNameForStorageUrl, StorageListResponse } from '.';
@@ -22,8 +22,7 @@ export const vercelBlobUploadFromClient = async (
 ): Promise<string> =>
   upload(
     fileName,
-    file,
-    {
+    file, {
       access: 'public',
       handleUploadUrl: PATH_API_VERCEL_BLOB_UPLOAD,
     },
@@ -34,10 +33,7 @@ export const vercelBlobPut = (
   file: Buffer,
   fileName: string,
 ): Promise<string> =>
-  put(fileName, file, {
-    addRandomSuffix: false,
-    access: 'public',
-  })
+  put(fileName, file, { access: 'public' })
     .then(({ url }) => url);
 
 export const vercelBlobCopy = (
@@ -48,10 +44,7 @@ export const vercelBlobCopy = (
   copy(
     sourceUrl,
     destinationFileName,
-    {
-      access: 'public',
-      addRandomSuffix,
-    },
+    { access: 'public', addRandomSuffix },
   )
     .then(({ url }) => url);
 
