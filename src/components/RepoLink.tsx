@@ -17,21 +17,6 @@ export default function RepoLink() {
         className={clsx(
           'gap-0.5 break-normal',
           'text-main hover:text-main',
-          'hover:underline',
-        )}>
-        Antonio Ponce
-        </Link>
-
-      <span className="hidden sm:inline-block">
-        using
-      </span>
-      <Link
-        href={TEMPLATE_REPO_URL}
-        target="_blank"
-        className={clsx(
-          'hidden',
-          'sm:flex items-center gap-0.5',
-          'text-main hover:text-main',
           'hover:text-medium active:text-dim',
         )}
       >

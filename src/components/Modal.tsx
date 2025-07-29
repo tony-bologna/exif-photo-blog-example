@@ -66,6 +66,11 @@ export default function Modal({
     ignoreShouldRespondToKeyboardCommands: true,
   });
 
+  useEscapeHandler({
+    onKeyDown: onClose,
+    ignoreShouldRespondToKeyboardCommands: true,
+  });
+
   useEscapeHandler(onClose, true);
 
   return (

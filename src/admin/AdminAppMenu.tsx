@@ -11,11 +11,11 @@ import {
   PATH_GRID_INFERRED,
 } from '@/app/path';
 import { useAppState } from '@/app/AppState';
-import { IoArrowDown, IoArrowUp, IoCloseSharp } from 'react-icons/io5';
+import { IoArrowDown, IoArrowUp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import { signOutAction } from '@/auth/actions';
-import { ComponentProps, useMemo } from 'react';
+import { ComponentProps, useEffect, useMemo } from 'react';
 import useIsKeyBeingPressed from '@/utility/useIsKeyBeingPressed';
 import IconPhoto from '@/components/icons/IconPhoto';
 import IconUpload from '@/components/icons/IconUpload';
@@ -31,6 +31,8 @@ import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
 import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
 import { MoreMenuSection } from '@/components/more/MoreMenu';
+import { usePathname } from 'next/navigation';
+import { FiXSquare } from 'react-icons/fi';
 
 export default function AdminAppMenu({
   isOpen,
@@ -39,6 +41,8 @@ export default function AdminAppMenu({
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
 }) {
+  const pathname = usePathname();
+
   const {
     photosCountTotal = 0,
     photosCountNeedSync = 0,
@@ -52,6 +56,12 @@ export default function AdminAppMenu({
     refreshAdminData,
     clearAuthStateAndRedirectIfNecessary,
   } = useAppState();
+
+  useEffect(() => {
+    if (pathname !== PATH_GRID_INFERRED) {
+      setSelectedPhotoIds?.(undefined);
+    }
+  }, [pathname, setSelectedPhotoIds]);
 
   const appText = useAppText();
 
@@ -81,7 +91,7 @@ export default function AdminAppMenu({
         annotation: `${uploadsCount}`,
         icon: <IconFolder
           size={16}
-          className="translate-x-[1px] translate-y-[1px]"
+          className="translate-x-[1px] translate-y-[0.5px]"
         />,
         href: PATH_ADMIN_UPLOADS,
       });
@@ -114,7 +124,7 @@ export default function AdminAppMenu({
         },
         icon: <IconPhoto
           size={15}
-          className="translate-x-[-0.5px] translate-y-[1px]"
+          className="translate-x-[-0.5px] translate-y-[0.5px]"
         />,
         href: PATH_ADMIN_PHOTOS,
       });
@@ -136,7 +146,7 @@ export default function AdminAppMenu({
         annotation: `${recipesCount}`,
         icon: <IconRecipe
           size={17}
-          className="translate-x-[-0.5px] translate-y-[1px]"
+          className="translate-x-[-0.5px]"
         />,
         href: PATH_ADMIN_RECIPES,
       });
@@ -147,26 +157,24 @@ export default function AdminAppMenu({
           ? appText.admin.batchExitEdit
           : appText.admin.batchEditShort,
         icon: isSelecting
-          ? <IoCloseSharp
-            size={18}
-            className="translate-x-[-1px] translate-y-[1px]"
+          ? <FiXSquare
+            size={15}
+            className="translate-x-[-0.75px] translate-y-[0.5px]"
           />
           : <IoMdCheckboxOutline
             size={16}
-            className="translate-x-[-0.5px]"
+            className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
-        href: PATH_GRID_INFERRED,
+        ...pathname !== PATH_GRID_INFERRED && {
+          href: PATH_GRID_INFERRED,
+        },
         action: () => {
           if (isSelecting) {
             setSelectedPhotoIds?.(undefined);
           } else {
             setSelectedPhotoIds?.([]);
           }
-          if (document.activeElement instanceof HTMLElement) {
-            document.activeElement.blur();
-          }
         },
-        shouldPreventDefault: false,
       });
     }
     items.push({
@@ -175,7 +183,7 @@ export default function AdminAppMenu({
         : appText.admin.appConfig,
       icon: <AdminAppInfoIcon
         size="small"
-        className="translate-x-[-0.5px] translate-y-[0.5px]"
+        className="translate-x-[-0.5px]"
       />,
       href: showAppInsightsLink
         ? PATH_ADMIN_INSIGHTS
@@ -184,6 +192,7 @@ export default function AdminAppMenu({
 
     return { items };
   }, [
+    pathname,
     appText,
     isSelecting,
     photosCountNeedSync,
