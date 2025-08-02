@@ -11,7 +11,7 @@ export default function AboutPage() {
                 padding="tight"
                 centered={true}
                 animate={true}>
-
+                    
                 <div className='flex-inline mt-8'>
                     <h1 className='text-3xl'> Mili&apos;s About Page </h1>
                 </div>

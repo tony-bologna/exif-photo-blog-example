@@ -136,12 +136,6 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
       formatExposureTime(photoDb.exposureTime),
     exposureCompensationFormatted:
       formatExposureCompensation(photoDb.exposureCompensation),
-    recipeData: photoDb.recipeData
-      // Legacy check on escaped, string-based JSON
-      ? typeof photoDb.recipeData === 'string'
-        ? JSON.parse(photoDb.recipeData)
-        : photoDb.recipeData
-      : undefined,
     takenAtNaiveFormatted:
       formatDateFromPostgresString(photoDb.takenAtNaive),
     recipeData: photoDb.recipeData

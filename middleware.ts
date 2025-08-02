@@ -4,6 +4,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   PATH_ADMIN,
   PATH_ADMIN_PHOTOS,
+  PATH_ABOUT,
+  PATH_BOOK_ME,
   PATH_OG,
   PATH_OG_SAMPLE,
   PREFIX_PHOTO,

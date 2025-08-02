@@ -8,6 +8,8 @@ import { Lens } from '@/lens';
 
 // Core
 export const PATH_ROOT                  = '/';
+export const PATH_ABOUT                 = '/about';
+export const PATH_BOOK_ME               = '/book-me';
 export const PATH_GRID                  = '/grid';
 export const PATH_FULL                  = '/full';
 export const PATH_ADMIN                 = '/admin';
@@ -106,6 +108,7 @@ export const PATHS_TO_CACHE = [
   PATH_GRID,
   PATH_FULL,
   PATH_OG,
+  PATH_ABOUT,
   PATH_PHOTO_DYNAMIC,
   PATH_CAMERA_DYNAMIC,
   PATH_LENS_DYNAMIC,
@@ -373,6 +376,9 @@ export const isPathFocalLengthPhoto = (pathname = '') =>
 
 export const checkPathPrefix = (pathname = '', prefix: string) =>
   pathname.toLowerCase().startsWith(prefix);
+
+export const isPathAbout = (pathname?: string) =>
+  pathname === PATH_ABOUT;
 
 export const isPathRoot = (pathname?: string) =>
   pathname === PATH_ROOT;
